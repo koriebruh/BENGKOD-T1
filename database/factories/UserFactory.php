@@ -32,12 +32,28 @@ class UserFactory extends Factory
         ];
     }
 
+//    //FACTORY UNUTK GENERATE RANDOM USERS
+//    public function RandUsers()
+//    {
+//        return [
+//            'nama' => $this->faker->name,
+//            'alamat' => $this->faker->address,
+//            'no_hp' => $this->faker->phoneNumber,
+//            'email' => $this->faker->unique()->safeEmail,
+//            'role' => $this->faker->randomElement(['dokter', 'pasien']), // Role acak antara dokter dan pasien
+//            'password' => bcrypt('password123'), // password terenkripsi
+//            'created_at' => now(),
+//            'updated_at' => now(),
+//        ];
+//    }
+
+
     /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
