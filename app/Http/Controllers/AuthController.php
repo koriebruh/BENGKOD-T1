@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
@@ -52,17 +56,21 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'role' => $request->role ?? 'pasien',
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
         ]);
 
         Auth::login($user);
 
-        return redirect('/home');
+        return redirect('/login');
     }
 
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/login');
     }
 
