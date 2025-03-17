@@ -22,3 +22,17 @@ php artisan make:controller AuthController
 php artisan make:controller PeriksaController
 php artisan make:controller ObatController
 
+#test model
+php artisan tinker
+App\Models\User::all();
+App\Models\Periksa::all();
+App\Models\Obat::all();
+App\Models\DetailPeriksa::all();
+
+php artisan make:seeder ObatTableSeeder
+php artisan make:seeder PeriksaTableSeeder
+php artisan make:seeder DetailPeriksaTableSeeder
+#
+php artisan db:seed --class=PeriksaTableSeeder
+php artisan db:seed --class=ObatTableSeeder
+php artisan db:seed --class=DetailPeriksaTableSeeder

@@ -4,14 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Obat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 //CRUD
 class ObatController
 {
+    public function __construct()
+    {
+        // Menambahkan middleware auth untuk semua method
+        $this->middleware('auth');
+
+        // Menambahkan middleware khusus untuk memeriksa role dokter
+        $this->middleware(function ($request, $next) {
+            if (Auth::user()->role != 'dokter') {
+                abort(403, 'Unauthorized action. Only doctors can access this page.');
+            }
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $obats = Obat::all();
-        return view('dokter.obat.index', compact('obats'));
+        return view('pages.master_obat', compact('obats'));
     }
 
     public function create()
@@ -45,7 +60,7 @@ class ObatController
             'harga' => $request->harga,
         ]);
 
-        return redirect()->route('dokter.obat.index');
+        return redirect()->route('dokter.obat.index')->with('status', 'Obat berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -53,6 +68,6 @@ class ObatController
         $obat = Obat::findOrFail($id);
         $obat->delete();
 
-        return redirect()->route('dokter.obat.index');
+        return redirect()->route('dokter.obat.index')->with('status', 'Obat berhasil dihapus!');
     }
 }

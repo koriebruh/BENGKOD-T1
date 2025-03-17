@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+
 
 class UsersTableSeeder extends Seeder
 {
@@ -21,7 +23,7 @@ class UsersTableSeeder extends Seeder
                 'alamat' => 'Jl. Kebon Jeruk No. 1, Jakarta',
                 'no_hp' => '081234567890',
                 'role' => 'dokter',
-                'remember_token' => str_random(10),
+                'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -33,7 +35,7 @@ class UsersTableSeeder extends Seeder
                 'alamat' => 'Jl. Raya No. 10, Jakarta',
                 'no_hp' => '082345678901',
                 'role' => 'pasien',
-                'remember_token' => str_random(10),
+                'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -45,7 +47,7 @@ class UsersTableSeeder extends Seeder
                 'alamat' => 'Jl. Sutan Syahrir No. 2, Bandung',
                 'no_hp' => '083456789012',
                 'role' => 'dokter',
-                'remember_token' => str_random(10),
+                'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -57,7 +59,7 @@ class UsersTableSeeder extends Seeder
                 'alamat' => 'Jl. Merdeka No. 15, Surabaya',
                 'no_hp' => '084567890123',
                 'role' => 'pasien',
-                'remember_token' => str_random(10),
+                'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -69,7 +71,7 @@ class UsersTableSeeder extends Seeder
                 'alamat' => 'Jl. Pahlawan No. 5, Yogyakarta',
                 'no_hp' => '085678901234',
                 'role' => 'dokter',
-                'remember_token' => str_random(10),
+                'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

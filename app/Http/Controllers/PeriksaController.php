@@ -28,24 +28,37 @@ class PeriksaController
     // Menyimpan hasil pemeriksaan pasien
     public function store(Request $request, $id_pasien)
     {
-        // Menyimpan pemeriksaan pasien
-        $periksa = Periksa::create([
-            'id_pasien' => $id_pasien,
-            'id_dokter' => Auth::user()->id, // ID dokter yang login
-            'tgl_periksa' => now(),
-            'catatan' => $request->catatan,
-            'biaya_periksa' => $request->biaya_periksa,
-        ]);
-
-        // Menyimpan detail pemeriksaan (obat yang dipilih)
-        foreach ($request->obat_id as $obat_id) {
-            DetailPeriksa::create([
-                'id_periksa' => $periksa->id,
-                'id_obat' => $obat_id,
+        if (Auth::user()->role === 'pasien') {
+            // Mengambil hanya id_dokter dan tgl_periksa untuk pasien
+            $periksa = Periksa::create([
+                'id_pasien' => $id_pasien,
+                'id_dokter' => $request->iddokter, // Mengambil ID dokter yang dipilih pasien
+                'tgl_periksa' => $request->tgl_periksa, // Tanggal periksa yang dimasukkan pasien
             ]);
+            return redirect()->route('periksa.show', $periksa->id);
         }
 
-        return redirect()->route('dokter.periksa.show', $periksa->id);
+        if (Auth::user()->role === 'dokter') {
+            // Dokter dapat mengisi lebih banyak data
+            $periksa = Periksa::create([
+                'id_pasien' => $id_pasien,
+                'id_dokter' => Auth::user()->id, // ID dokter yang login
+                'tgl_periksa' => now(),
+                'catatan' => $request->catatan,
+                'biaya_periksa' => $request->biaya_periksa,
+            ]);
+
+            // Menyimpan detail pemeriksaan (obat yang dipilih)
+            foreach ($request->obat_id as $obat_id) {
+                DetailPeriksa::create([
+                    'id_periksa' => $periksa->id,
+                    'id_obat' => $obat_id,
+                ]);
+            }
+            return redirect()->route('dokter.periksa.show', $periksa->id);
+        }
+
+        return redirect('/home');
     }
 
     // SHOW RESULT PEMERIKSAAN BY ID PASIEN

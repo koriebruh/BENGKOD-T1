@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DetailPeriksa;
 use App\Models\User;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,6 +18,9 @@ class DatabaseSeeder extends Seeder
         //CALL ALL DATA WANT SEEDER
         $this->call([
             UsersTableSeeder::class,
+            PeriksaTableSeeder::class,
+            ObatTableSeeder::class,
+            DetailPeriksa::class,
         ]);
     }
 }
