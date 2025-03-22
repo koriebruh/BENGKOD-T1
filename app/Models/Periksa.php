@@ -37,4 +37,8 @@ class Periksa extends Model
         return \Carbon\Carbon::parse($value)->format('d M Y H:i');
     }
 
+    public function obat()
+    {
+        return $this->belongsToMany(Obat::class, 'detail_periksas', 'id_periksa', 'id_obat');
+    }
 }
