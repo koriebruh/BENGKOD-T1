@@ -33,6 +33,8 @@ php artisan make:seeder ObatTableSeeder
 php artisan make:seeder PeriksaTableSeeder
 php artisan make:seeder DetailPeriksaTableSeeder
 #
+php artisan db:seed
 php artisan db:seed --class=PeriksaTableSeeder
 php artisan db:seed --class=ObatTableSeeder
 php artisan db:seed --class=DetailPeriksaTableSeeder
+
