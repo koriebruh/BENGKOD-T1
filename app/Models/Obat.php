@@ -17,9 +17,4 @@ class Obat extends Model
         'harga'
     ];
 
-    public function getHargaAttribute($value)
-    {
-        return number_format($value, 0, ',', '.');
-    }
-
 }

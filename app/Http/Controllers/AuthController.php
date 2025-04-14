@@ -28,11 +28,11 @@ class AuthController extends Controller
             //SET SESSION
             Auth::login($user);
             if ($user->role === 'dokter') {
-                return redirect()->intended('/dokter-dashboard');
+                return redirect()->intended('/dokter/dashboard');
             } elseif ($user->role === 'pasien') {
-                return redirect()->intended('/pasien-dashboard');
+                return redirect()->intended('/pasien/dashboard');
             } else {
-                return redirect()->intended('/home');
+                return redirect()->intended('/login');
             }
 
         } else {

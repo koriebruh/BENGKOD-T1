@@ -21,6 +21,7 @@ php artisan make:model DetailPeriksa
 php artisan make:controller AuthController
 php artisan make:controller PeriksaController
 php artisan make:controller ObatController
+php artisan make:controller DokterController
 
 #test model
 php artisan tinker

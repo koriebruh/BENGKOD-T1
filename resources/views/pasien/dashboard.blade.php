@@ -1,6 +1,6 @@
 @extends('components.layout')
 @section('content')
-    <h1>Baka baka baka Paisen</h1>
+    <h1>P pasient  Paisen</h1>
 
     <!-- /.row -->
     <div class="row">
