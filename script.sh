@@ -19,9 +19,8 @@ php artisan make:model DetailPeriksa
 
 #MAKE CONTROLLER, itu gabungan repository service dan handler
 php artisan make:controller AuthController
-php artisan make:controller PeriksaController
-php artisan make:controller ObatController
 php artisan make:controller DokterController
+php artisan make:controller PasienController
 
 #test model
 php artisan tinker

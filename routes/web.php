@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\PasienController;
 use App\Http\Middleware\CheckDokter;
 use App\Models\Periksa;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,12 @@ Route::middleware(['auth'])->group(function () {
         $periksas = Periksa::all();
         return view('pasien.dashboard', ['periksas' => $periksas]);
     })->name('pasien.dashboard');
+    Route::get('/pasien/periksa', function () {return view('pasien.periksa');})->name('pasien.periksa');
+    /*
+     * RETURN VIEW PASIEN PERIKSA AND HASIL QUERY KE DATABASE
+     * */
+    Route::get('/pasien/riwayat', [PasienController::class, 'showRiwayat'])->name('pasien.riwayat');
+
 
     // Route untuk dokter
     Route::middleware(['dokter'])->group(function () {
