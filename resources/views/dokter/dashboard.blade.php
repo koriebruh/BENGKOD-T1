@@ -2,11 +2,12 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link">Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link">Obat</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link">Periksa</a></li>
-
-        {{--        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link">Periksa</a></li>--}}
+        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
+                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link"> <i class="nav-icon fas fa-th"></i>
+                Obat</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> Periksa</a></li>
     </ul>
 @endsection
 
@@ -21,9 +22,9 @@
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>150</h3>
+                            <h3>{{$totalObat}}</h3>
 
-                            <p>New Orders</p>
+                            <p>TOTAL OBAT</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -36,9 +37,9 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+                            <h3>{{$totalPeriksa}}<sup style="font-size: 20px"> ORANG </sup></h3>
 
-                            <p>Bounce Rate</p>
+                            <p>SUDAH DI PERIKSA</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -51,9 +52,9 @@
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
+                            <h3>{{$totalDokter}}</h3>
 
-                            <p>User Registrations</p>
+                            <p>TOTAL DOKTER</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
@@ -66,9 +67,9 @@
                     <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>65</h3>
+                            <h3>{{$totalPelangan}}</h3>
 
-                            <p>Unique Visitors</p>
+                            <p>TOTAL PALANGGAN</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -81,6 +82,13 @@
 
         </div><!-- /.container-fluid -->
     </section>
+    @if(session('welcome_message'))
+        <p>{{ session('welcome_message') }}</p>
+    @endif
+
+    @if(Auth::check())
+        <p>Welcome, {{ Auth::user()->name }}!</p>
+    @endif
 
 @endsection
 

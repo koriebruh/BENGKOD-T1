@@ -42,10 +42,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dokter/dashboard', function () {
             return view('dokter.dashboard');
         })->name('dokter.dashboard');
+        Route::get('/dokter/dashboard', [DokterController::class, 'dokterDashboard'])->name('dokter.dashboard');
+
+
 
         Route::get('/dokter/periksa', function () {return view('dokter.periksa');})->name('dokter.periksa');
-
         Route::get('/dokter/periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
+
 
         // CRUD untuk obat
         Route::prefix('dokter')->name('dokter.')->group(function () {

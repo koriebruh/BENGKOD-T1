@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Obat;
 use App\Models\Periksa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -96,23 +97,27 @@ class DokterController extends Controller
         }
     }
 
-    // Show all periksa by id doketer nya
-//    public function periksaByDokterId(Request $request)
-//    {
-//        try {
-//            $dokterId = $request->input('dokter_id'); // Get the dokter_id from the request
-//            $periksas = Periksa::getPeriksaByDokterId($dokterId); // Fetch Periksa data for the given dokter_id
-//
-//            return view('dokter.periksa', compact('periksas')); // Pass the data to the view
-//        } catch (\Exception $e) {
-//            Log::error("Error fetching periksa: " . $e->getMessage());
-//            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data pemeriksaan.');
-//        }
-//    }
-
     public function periksa()
     {
-        $periksas = Periksa::with(['pasien', 'dokter'])->get(); // Mengambil semua data periksa dengan relasi pasien dan dokter
+        // Get the ID of the currently logged-in doctor
+        $id_dokter = auth()->user()->id;
+
+        // Fetch only the examinations associated with this doctor
+        $periksas = Periksa::with(['pasien', 'dokter'])
+            ->where('id_dokter', $id_dokter)
+            ->get();
+
         return view('dokter.periksa', compact('periksas'));
     }
+
+    public function dokterDashboard()
+    {
+        $totalObat = Obat::count();
+        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
+        $totalDokter =User::where('role', 'dokter')->count();
+        $totalPelangan =User::where('role', 'pasien')->count();
+
+        return view('dokter.dashboard', compact('totalObat', 'totalPeriksa','totalDokter','totalPelangan'));
+    }
+
 }

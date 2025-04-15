@@ -2,11 +2,15 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link">Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link active">Obat</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link">Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
+                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link"> <i class="nav-icon fas fa-th"></i>
+                Obat</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> Periksa</a></li>
     </ul>
 @endsection
+
 
 @section('content')
     <div class="container mt-4">

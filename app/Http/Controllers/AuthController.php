@@ -27,10 +27,14 @@ class AuthController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             //SET SESSION
             Auth::login($user);
+
+            // Mengirimkan nama pengguna untuk ditampilkan pada view setelah login
+            $username = Auth::user()->name;
+
             if ($user->role === 'dokter') {
-                return redirect()->intended('/dokter/dashboard');
+                return redirect()->intended('/dokter/dashboard')->with($username);
             } elseif ($user->role === 'pasien') {
-                return redirect()->intended('/pasien/dashboard');
+                return redirect()->intended('/pasien/dashboard')->with($username);
             } else {
                 return redirect()->intended('/login');
             }
@@ -41,6 +45,7 @@ class AuthController extends Controller
             ]);
         }
     }
+
 
     public function register(Request $request)
     {
