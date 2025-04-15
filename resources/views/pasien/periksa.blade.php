@@ -12,15 +12,41 @@
     </ul>
 @endsection
 
-
-
 @section('content')
-    <h1>pasient periksaSWS</h1>
-{{--    <h1>{{$periksas}}</h1>--}}
+    <h1>Form Periksa Pasien</h1>
 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
+    <form action="{{ url('/pasien/periksa') }}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="id_dokter">Dokter</label>
+            <select name="id_dokter" id="id_dokter" class="form-control @error('id_dokter') is-invalid @enderror">
+                <option value="">Pilih Dokter</option>
+                @foreach($dokters as $dokter)
+                    <option value="{{ $dokter->id }}" {{ old('id_dokter') == $dokter->id ? 'selected' : '' }}>
+                        {{ $dokter->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('id_dokter')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
+        <div class="form-group">
+            <label for="tgl_periksa">Tanggal Periksa</label>
+            <input type="date" name="tgl_periksa" id="tgl_periksa" class="form-control @error('tgl_periksa') is-invalid @enderror"
+                   value="{{ old('tgl_periksa') }}">
+            @error('tgl_periksa')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-primary">Buat Periksa</button>
+    </form>
 @endsection
-
-
-

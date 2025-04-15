@@ -32,11 +32,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 //DASHBOARD AUTHENTICATION
 Route::middleware(['auth'])->group(function () {
     // Route untuk pasien
-    Route::get('/pasien/dashboard', function () {
-        $periksas = Periksa::all();
-        return view('pasien.dashboard', ['periksas' => $periksas]);
-    })->name('pasien.dashboard');
-    Route::get('/pasien/periksa', function () {return view('pasien.periksa');})->name('pasien.periksa');
+//    Route::get('/pasien/dashboard', function () {
+//        PasienController::class
+//        return view('pasien.dashboard', );
+//    })->name('pasien.dashboard');
+    Route::get('/pasien/dashboard', [PasienController::class, 'pasienDashboard'])->name('pasien.dashboard');
+    Route::get('/pasien/periksa', [PasienController::class, 'showPeriksaForm'])->name('pasien.periksa');
+    Route::post('/pasien/periksa', [PasienController::class, 'createPeriksa']);
+
     /*
      * RETURN VIEW PASIEN PERIKSA AND HASIL QUERY KE DATABASE
      * */
@@ -55,7 +58,12 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/dokter/periksa', function () {return view('dokter.periksa');})->name('dokter.periksa');
         Route::get('/dokter/periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
-
+        Route::middleware('auth')->prefix('dokter')->group(function () {
+            Route::get('periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
+            Route::get('periksa/{id}/edit', [DokterController::class, 'editPeriksa'])->name('dokter.editPeriksa');
+            Route::put('periksa/{id}', [DokterController::class, 'updatePeriksa'])->name('dokter.updatePeriksa');
+            Route::delete('periksa/{id}', [DokterController::class, 'deletePeriksa'])->name('dokter.deletePeriksa');
+        });
 
         // CRUD untuk obat
         Route::prefix('dokter')->name('dokter.')->group(function () {

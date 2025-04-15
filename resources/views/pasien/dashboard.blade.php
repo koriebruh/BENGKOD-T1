@@ -14,61 +14,53 @@
 
 
 @section('content')
-    <h1>P pasient  Paisen</h1>
+    <section class="content">
+        <h1>Dashboard</h1>
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{$totalPeriksa}}</h3>
 
-    <!-- /.row -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Responsive Hover Table</h3>
-
-                    <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right"
-                                   placeholder="Search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
+                            <p>TOTAL PERIKSA</p>
                         </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Tanggal Periksa</th>
-                            <th>Catatan Dokter</th>
-                            <th>Biaya periksa</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($periksas as $p)
-                            <tr>
-                                {{--                                <td>{{ $loop->$iteration }}</td>--}}
-                                <td>{{ $p->id }}</td>
-                                <td>{{ $p->pasien->name }}</td>
-                                <td>{{ $p->tgl_periksa}}</td>
-                                <td>{{ $p->catatan }}.</td>
-                                <td>{{ $p->biaya_periksa }}.</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-    </div>
-    <!-- /.row -->
+{{--                ntar tah kok ga ke count--}}
+{{--                <!-- ./col -->--}}
+{{--                <div class="col-lg-3 col-6">--}}
+{{--                    <!-- small box -->--}}
+{{--                    <div class="small-box bg-success">--}}
+{{--                        <div class="inner">--}}
+{{--                            <h3>{{$totalSpending}}<sup style="font-size: 20px"> HAHA </sup></h3>--}}
 
+{{--                            <p>TOTAL SPENNDING</p>--}}
+{{--                        </div>--}}
+{{--                        <div class="icon">--}}
+{{--                            <i class="ion ion-stats-bars"></i>--}}
+{{--                        </div>--}}
+{{--                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <!-- ./col -->
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+    @if(session('welcome_message'))
+        <p>{{ session('welcome_message') }}</p>
+    @endif
+
+    @if(Auth::check())
+        <p>Welcome, {{ Auth::user()->name }}!</p>
+    @endif
 @endsection
 
 
