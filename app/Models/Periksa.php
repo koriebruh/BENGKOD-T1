@@ -41,4 +41,11 @@ class Periksa extends Model
     {
         return $this->belongsToMany(Obat::class, 'detail_periksas', 'id_periksa', 'id_obat');
     }
+
+    public static function getPeriksaByDokterId($dokterId)
+    {
+        return self::where('id_dokter', $dokterId)
+            ->with(['dokter', 'pasien'])  // Eager load the 'dokter' and 'pasien' relations
+            ->get();
+    }
 }

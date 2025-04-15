@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obat;
+use App\Models\Periksa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -93,5 +94,25 @@ class DokterController extends Controller
             Log::error("Error deleting obat: " . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus obat.');
         }
+    }
+
+    // Show all periksa by id doketer nya
+//    public function periksaByDokterId(Request $request)
+//    {
+//        try {
+//            $dokterId = $request->input('dokter_id'); // Get the dokter_id from the request
+//            $periksas = Periksa::getPeriksaByDokterId($dokterId); // Fetch Periksa data for the given dokter_id
+//
+//            return view('dokter.periksa', compact('periksas')); // Pass the data to the view
+//        } catch (\Exception $e) {
+//            Log::error("Error fetching periksa: " . $e->getMessage());
+//            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data pemeriksaan.');
+//        }
+//    }
+
+    public function periksa()
+    {
+        $periksas = Periksa::with(['pasien', 'dokter'])->get(); // Mengambil semua data periksa dengan relasi pasien dan dokter
+        return view('dokter.periksa', compact('periksas'));
     }
 }

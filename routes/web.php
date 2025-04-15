@@ -43,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
             return view('dokter.dashboard');
         })->name('dokter.dashboard');
 
+        Route::get('/dokter/periksa', function () {return view('dokter.periksa');})->name('dokter.periksa');
+
+        Route::get('/dokter/periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
+
         // CRUD untuk obat
         Route::prefix('dokter')->name('dokter.')->group(function () {
             Route::get('/obat', [DokterController::class, 'showObat'])->name('obat');
@@ -50,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/obat/edit/{id}', [DokterController::class, 'editObat']);
             Route::post('/obat/update/{id}', [DokterController::class, 'updateObat']);
             Route::get('/obat/delete/{id}', [DokterController::class, 'deleteObat']);
+
         });
 
 //        Route::get('/periksa', [DokterController::class, 'showPeriksa'])->name('periksa'); // Menampilkan periksa
