@@ -2,14 +2,18 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
+        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
                     class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link"> <i class="nav-icon fas fa-th"></i>
-                Obat</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('admin.obatMaster') }}" class="nav-link"> <i
+                    class="nav-icon fas fa-th"></i>
+                ObatMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.dokterMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> DokterMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.pasienMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> PasienMaster</a></li>
     </ul>
 @endsection
+
 
 
 @section('content')
@@ -27,7 +31,7 @@
                 <h5 class="card-title mb-0">Tambah Obat</h5>
             </div>
             <div class="card-body">
-                <form action="{{ url('dokter/obat') }}" method="POST">
+                <form action="{{ url('admin/obat') }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="nama_obat">Nama Obat</label>
@@ -88,8 +92,8 @@
                             <td>{{ $item->kemasan }}</td>
                             <td>Rp {{ number_format((float) $item->harga, 2, ',', '.') }}</td>
                             <td>
-                                <a href="{{ url('dokter/obat/edit/' . $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{{ url('dokter/obat/delete/' . $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus obat ini?')">Hapus</a>
+                                <a href="{{ url('admin/obat/edit/' . $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ url('admin/obat/delete/' . $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus obat ini?')">Hapus</a>
                             </td>
                         </tr>
                     @empty
@@ -122,3 +126,5 @@
         });
     </script>
 @endsection
+
+

@@ -2,10 +2,15 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
+        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
                     class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('admin.obatMaster') }}" class="nav-link"> <i
+                    class="nav-icon fas fa-th"></i>
+                ObatMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.dokterMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> DokterMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.pasienMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> PasienMaster</a></li>
     </ul>
 @endsection
 

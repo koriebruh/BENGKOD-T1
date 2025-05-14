@@ -35,7 +35,9 @@ class AuthController extends Controller
                 return redirect()->intended('/dokter/dashboard')->with($username);
             } elseif ($user->role === 'pasien') {
                 return redirect()->intended('/pasien/dashboard')->with($username);
-            } else {
+            } elseif ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard')->with($username);
+            }else {
                 return redirect()->intended('/login');
             }
 

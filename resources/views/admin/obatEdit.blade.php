@@ -2,12 +2,15 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
+        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
                     class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.obat') }}" class="nav-link"> <i class="nav-icon fas fa-th"></i>
-                Obat</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('admin.obatMaster') }}" class="nav-link"> <i
+                    class="nav-icon fas fa-th"></i>
+                ObatMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.dokterMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> DokterMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.pasienMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> PasienMaster</a></li>
     </ul>
 @endsection
 
@@ -33,7 +36,7 @@
                 <h5 class="card-title mb-0">Form Edit Obat</h5>
             </div>
             <div class="card-body">
-                <form action="{{ url('dokter/obat/update/' . $obat->id) }}" method="POST">
+                <form action="{{ url('admin/obat/update/' . $obat->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="nama_obat">Nama Obat</label>
@@ -49,7 +52,7 @@
                     </div>
                     <div class="form-group text-right">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        <a href="{{ route('dokter.obat') }}" class="btn btn-secondary ml-2">Batal</a>
+                        <a href="{{ route('admin.obatMaster') }}" class="btn btn-secondary ml-2">Batal</a>
                     </div>
                 </form>
             </div>

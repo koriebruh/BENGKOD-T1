@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\PasienController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,35 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 //DASHBOARD AUTHENTICATION
 Route::middleware(['auth'])->group(function () {
 
+    /* MIN min Admiiinn
+     * */
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'adminDashboard'])->name('dashboard');
+
+        //CRUD DOKTER and PASIEN
+        Route::get('/dokter', [AdminController::class, 'showUsers'])->name('dokterMaster')->defaults('role', 'dokter');
+        Route::post('/dokter', [AdminController::class, 'createUser']);
+        Route::get('/dokter/edit/{id}', [AdminController::class, 'getUser']);
+        Route::put('/dokter/update/{id}', [AdminController::class, 'updateUser']);
+        Route::get('/dokter/delete/{id}', [AdminController::class, 'deleteUser']);
+
+        Route::get('/pasien', [AdminController::class, 'showUsers'])->name('pasienMaster')->defaults('role', 'pasien');
+        Route::post('/pasien', [AdminController::class, 'createUser']);
+        Route::get('/pasien/edit/{id}', [AdminController::class, 'getUser']);
+        Route::put('/pasien/update/{id}', [AdminController::class, 'updateUser']);
+        Route::get('/pasien/delete/{id}', [AdminController::class, 'deleteUser']);
+
+        // CRUD OBAT
+        Route::get('/obat', [AdminController::class, 'showObat'])->name('obatMaster');
+        Route::post('/obat', [AdminController::class, 'createObat']);
+        Route::get('/obat/edit/{id}', [AdminController::class, 'editObat']);
+        Route::post('/obat/update/{id}', [AdminController::class, 'updateObat']);
+        Route::get('/obat/delete/{id}', [AdminController::class, 'deleteObat']);
+
+
+    });
+
+
     /*PASIEN
      * */
     Route::middleware('role:pasien')->prefix('pasien')->name('pasien.')->group(function () {
@@ -38,7 +68,6 @@ Route::middleware(['auth'])->group(function () {
     /*DOKTER
      * */
     Route::middleware('role:dokter')->prefix('dokter')->name('dokter.')->group(function () {
-
         Route::get('/dashboard', [DokterController::class, 'dokterDashboard'])->name('dashboard');
 
         Route::get('/periksa', [DokterController::class, 'periksa'])->name('periksa');
@@ -46,10 +75,5 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/periksa/{id}', [DokterController::class, 'updatePeriksa'])->name('updatePeriksa');
         Route::delete('/periksa/{id}', [DokterController::class, 'deletePeriksa'])->name('deletePeriksa');
 
-        Route::get('/obat', [DokterController::class, 'showObat'])->name('obat');
-        Route::post('/obat', [DokterController::class, 'createObat']);
-        Route::get('/obat/edit/{id}', [DokterController::class, 'editObat']);
-        Route::post('/obat/update/{id}', [DokterController::class, 'updateObat']);
-        Route::get('/obat/delete/{id}', [DokterController::class, 'deleteObat']);
     });
 });
