@@ -1,6 +1,7 @@
 php artisan make:migration create_periksa_tabel --create=periksa
 php artisan make:migration create_obat_tabel --create=obat
 php artisan make:migration create_detail_periksa_tabel --create=detail_periksa
+php artisan make:migration create_jadwal_periksa_tabel --create=jadwal_periksa
 
 #php artisan make:factory UserFactory --model=User
 php artisan make:seeder UsersTableSeeder
@@ -16,6 +17,7 @@ php artisan make:model User
 php artisan make:model Periksa
 php artisan make:model Obat
 php artisan make:model DetailPeriksa
+php artisan make:model JadwalPeriksa
 
 #MAKE CONTROLLER, itu gabungan repository service dan handler
 php artisan make:controller AuthController

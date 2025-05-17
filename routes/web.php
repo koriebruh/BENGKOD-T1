@@ -75,5 +75,16 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/periksa/{id}', [DokterController::class, 'updatePeriksa'])->name('updatePeriksa');
         Route::delete('/periksa/{id}', [DokterController::class, 'deletePeriksa'])->name('deletePeriksa');
 
+        // EDIT PROFILE
+        Route::get('/profile/{id}/edit', [DokterController::class, 'getProfile'])->name('dashboardEdit');
+        Route::put('/profile/{id}', [DokterController::class, 'editProfile'])->name('updateProfile');
+
+        // CRUD JADWALPERIKSA, name itu alias jadi view bisa pangil langsung
+        Route::get('/jadwal', [DokterController::class, 'dokterJadwal'])->name('jadwalPeriksa');
+        Route::post('/jadwal', [DokterController::class, 'storeJadwal'])->name('storeJadwal');
+        Route::get('/jadwal/edit/{id}', [DokterController::class, 'editJadwal'])->name('editJadwal');
+        Route::put('/jadwal/{id}', [DokterController::class, 'updateJadwal'])->name('updateJadwal');
+        Route::delete('/jadwal/{id}', [DokterController::class, 'deleteJadwal'])->name('deleteJadwal');
+
     });
 });

@@ -6,6 +6,8 @@
                     class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
         <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
                     class="nav-icon fas fa-book"></i> Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> JadwalPeriksa</a></li>
     </ul>
 @endsection
 
@@ -84,8 +86,20 @@
         <p>{{ session('welcome_message') }}</p>
     @endif
 
+    <h1>BioData</h1>
     @if(Auth::check())
-        <p>Welcome, {{ Auth::user()->name }}!</p>
+        <p>ID, {{ Auth::user()->id }}!</p>
+        <p>NAME, {{ Auth::user()->name }}!</p>
+        <p>EMAIL, {{ Auth::user()->email }}!</p>
+        <p>PASSWORD, {{ Auth::user()->password }}!</p>
+        <p>NO HP, {{ Auth::user()->no_hp }}!</p>
+        <p>ALAMAT, {{ Auth::user()->alamat }}!</p>
+
+{{--        {{ route('dokter.dashboardEdit')}}--}}
+        <a href="{{ route('dokter.dashboardEdit', ['id' => Auth::user()->id]) }}" class="btn btn-sm btn-info">
+            <i class="fas fa-edit"></i> Edit anjay
+        </a>
+
     @endif
 
 @endsection
