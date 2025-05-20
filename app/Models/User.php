@@ -25,6 +25,9 @@ class User extends Authenticatable
         'alamat',
         'no_hp',
         'role',
+        'no_ktp',
+        'no_rm',
+        'poli_id',
     ];
 
     /**
@@ -59,4 +62,27 @@ class User extends Authenticatable
         return $this->hasMany(Periksa::class, 'id_dokter');
     }
 
+    // ONE TO MANY
+    public function poli()
+    {
+        return $this->belongsTo(Poli::class);
+    }
+
+    // GNEERATED FOORMATING NO REKAM MEDIS
+    public static function generateNoRmFromId($id)
+    {
+        $now = now();
+        $prefix = $now->format('Ym');
+        return $prefix . '-' . $id;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            $user->no_rm = self::generateNoRmFromId($user->id);
+            $user->save();
+        });
+    }
 }

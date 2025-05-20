@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('jadwal_periksa', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_dokter')->constrained('users')->onDelete('cascade');
-            $table->date('tanggal');
+            $table->date('hari');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->integer('kuota_max')->default(1);
-            $table->integer('kuota_terpakai')->default(0);
             $table->enum('status', ['tersedia', 'penuh', 'tidak_aktif'])->default('tersedia');
         });
     }

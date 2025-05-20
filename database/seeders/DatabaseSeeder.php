@@ -12,10 +12,12 @@ class DatabaseSeeder extends Seeder
     {
         //CALL ALL DATA WANT SEEDER
         $this->call([
+            PoliSeeder::class,
             UsersTableSeeder::class,
             PeriksaTableSeeder::class,
             ObatTableSeeder::class,
             DetailPeriksaTableSeeder::class,
+            JadwalPeriksaTableSeeder::class
         ]);
     }
 }

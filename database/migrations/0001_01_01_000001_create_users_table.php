@@ -21,6 +21,14 @@ return new class extends Migration {
             $table->string('role', 50)->default('pasien');
             $table->rememberToken();
             $table->timestamps();
+
+            // NEW Fields
+            $table->bigInteger('no_ktp');
+            $table->char('no_rm', 10)->nullable();
+
+            // many to one relationship many user have one poli
+            $table->unsignedBigInteger('poli_id')->nullable();
+            $table->foreign('poli_id')->references('id')->on('poli')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -6,6 +6,8 @@
                     class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
         <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
                     class="nav-icon fas fa-book"></i> Periksa</a></li>
+        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
+                    class="nav-icon fas fa-book"></i> JadwalPeriksa</a></li>
     </ul>
 @endsection
 

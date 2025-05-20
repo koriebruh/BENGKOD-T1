@@ -14,11 +14,9 @@ class JadwalPeriksa extends Model
     public $timestamps = false;
     protected $fillable = [
         'id_dokter',
-        'tanggal',
+        'hari',
         'jam_mulai',
         'jam_selesai',
-        'kuota_max',
-        'kuota_terpakai',
         'status',
     ];
 
