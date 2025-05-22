@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,10 +13,14 @@ return new class extends Migration
         Schema::create('jadwal_periksa', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_dokter')->constrained('users')->onDelete('cascade');
-            $table->date('hari');
+            $table->enum('hari', ['senin', 'selasa', 'rabu', 'kamis', 'jumat']);
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->enum('status', ['tersedia', 'penuh', 'tidak_aktif'])->default('tersedia');
+            $table->boolean('status')->default(false);
+
+            // Index untuk optimasi query
+            $table->index(['id_dokter', 'status']);
+            $table->index('hari');
         });
     }
 

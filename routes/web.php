@@ -76,10 +76,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:dokter')->prefix('dokter')->name('dokter.')->group(function () {
         Route::get('/dashboard', [DokterController::class, 'dokterDashboard'])->name('dashboard');
 
-        Route::get('/periksa', [DokterController::class, 'periksa'])->name('periksa');
-        Route::get('/periksa/{id}/edit', [DokterController::class, 'editPeriksa'])->name('editPeriksa');
-        Route::put('/periksa/{id}', [DokterController::class, 'updatePeriksa'])->name('updatePeriksa');
-        Route::delete('/periksa/{id}', [DokterController::class, 'deletePeriksa'])->name('deletePeriksa');
+        Route::get('/memeriksa', [DokterController::class, 'notYetPeriksa'])->name('memeriksa');
+        Route::get('/memeriksa/{id}/edit', [DokterController::class, 'editPeriksa'])->name('memeriksEdit');
+        Route::put('/memeriksa/{id}', [DokterController::class, 'memeriksaPasien'])->name('memeriksaPasien');
+        Route::delete('/memeriksa/{id}', [DokterController::class, 'deletePeriksa'])->name('tolakPeriksa');
 
         // EDIT PROFILE
         Route::get('/profile/{id}/edit', [DokterController::class, 'getProfile'])->name('dashboardEdit');
@@ -91,6 +91,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jadwal/edit/{id}', [DokterController::class, 'editJadwal'])->name('editJadwal');
         Route::put('/jadwal/{id}', [DokterController::class, 'updateJadwal'])->name('updateJadwal');
         Route::delete('/jadwal/{id}', [DokterController::class, 'deleteJadwal'])->name('deleteJadwal');
+
+        Route::patch('/jadwal/{id}/toggle-status', [DokterController::class, 'toggleStatusJadwal'])->name('toggleStatusJadwal');
+
+        // HITORY PEMERIKSAAN OLEH DOKTER
+        Route::get('/history-periksa', [DokterController::class, 'showHitoryPemeriksaan'])->name('historyPeriksa');
 
     });
 });
