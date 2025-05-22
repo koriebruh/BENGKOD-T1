@@ -45,3 +45,5 @@ php artisan db:seed --class=PeriksaTableSeeder
 php artisan db:seed --class=ObatTableSeeder
 php artisan db:seed --class=DetailPeriksaTableSeeder
 
+#CHECK LOG
+ tail -f storage/logs/laravel.log

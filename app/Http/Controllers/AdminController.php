@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Obat;
 use App\Models\Periksa;
+use App\Models\Poli;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
+/*
+ * IN LARAPEL Edit = getData
+ * unutk benar uppate itu di func Update
+ * */
 
 class AdminController extends Controller
 {
@@ -14,10 +21,10 @@ class AdminController extends Controller
     {
         $totalObat = Obat::count();
         $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
-        $totalDokter =User::where('role', 'dokter')->count();
-        $totalPelangan =User::where('role', 'pasien')->count();
+        $totalDokter = User::where('role', 'dokter')->count();
+        $totalPelangan = User::where('role', 'pasien')->count();
 
-        return view('admin.dashboard', compact('totalObat', 'totalPeriksa','totalDokter','totalPelangan'));
+        return view('admin.dashboard', compact('totalObat', 'totalPeriksa', 'totalDokter', 'totalPelangan'));
     }
 
     /*CRUD OBAT DEKKK
@@ -119,9 +126,10 @@ class AdminController extends Controller
 
             // Fetch users based on the provided role
             $users = User::where('role', $roleName)->get();
+            $polis = Poli::all();
 
             if ($roleName == 'dokter') {
-                return view('admin.dokterMaster', compact('users'));
+                return view('admin.dokterMaster', compact('users','polis'));
             } elseif ($roleName == 'pasien') {
                 return view('admin.pasienMaster', compact('users'));
             } else {
@@ -144,6 +152,9 @@ class AdminController extends Controller
                 'alamat' => 'nullable|string',
                 'no_hp' => 'nullable|string',
                 'role' => 'required|string', // Adjust roles as necessary
+                'poli_id' => 'exists:poli,id',
+                'no_ktp' => 'nullable|string',
+                'no_rm' => 'nullable|string',
             ]);
 
             $user = User::create([
@@ -153,20 +164,24 @@ class AdminController extends Controller
                 'alamat' => $validatedData['alamat'] ?? null,
                 'no_hp' => $validatedData['no_hp'] ?? null,
                 'role' => $validatedData['role'],  //
+                'no_ktp' => $validatedData['no_ktp'],
+                'poli_id' => $validatedData['poli_id']?? null,
             ]);
 
             if ($validatedData['role'] == 'pasien') {
                 return redirect()->route('admin.pasienMaster')->with('success', 'User successfully created.');
             } elseif ($validatedData['role'] == 'dokter') {
                 return redirect()->route('admin.dokterMaster')->with('success', 'User successfully created.');
-            } else{
+            } else {
                 Log::error("Error creating user: ");
                 return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat pengguna role salah.');
             }
 
+            Log::info("INI PAYLOAD REQUEST: " . json_encode($validatedData));
+
         } catch (\Exception $e) {
             Log::error("Error creating user: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat pengguna.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat pengguna.', )->withErrors($e->getMessage());
         }
     }
 
@@ -174,10 +189,11 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+            $polis = Poli::all();
 
             // Return different views based on user role
             if ($user->role == 'dokter') {
-                return view('admin.dokterEdit', compact('user'));
+                return view('admin.dokterEdit', compact('user','polis'));
             } elseif ($user->role == 'pasien') {
                 return view('admin.pasienEdit', compact('user'));
             } else {
@@ -199,6 +215,9 @@ class AdminController extends Controller
                 'alamat' => 'nullable|string',
                 'no_hp' => 'nullable|string',
                 'role' => 'required|string',
+                'poli_id' => 'exists:poli,id',
+                'no_ktp' => 'nullable|string',
+                'no_rm' => 'nullable|string',
             ]);
 
             // If password is provided, validate it
@@ -214,6 +233,8 @@ class AdminController extends Controller
             $user->alamat = $validatedData['alamat'] ?? $user->alamat;
             $user->no_hp = $validatedData['no_hp'] ?? $user->no_hp;
             $user->role = $validatedData['role'];
+            $user->poli_id = $validatedData['poli_id']?? null;
+            $user->no_ktp = $validatedData['no_ktp'];
 
             // Update password only if provided
             if ($request->filled('password')) {
@@ -257,5 +278,84 @@ class AdminController extends Controller
         }
     }
 
+
+    /*CRUD POLI
+     * */
+    public function showPolis()
+    {
+        try {
+            if (Auth::check() && Auth::user()->role !== 'admin') {
+                return redirect('/')->with('error', 'Anda tidak punya akses.');
+            }
+
+            $poli = Poli::all();
+            return view('admin.poliMaster', compact('poli'));
+
+        } catch (\Exception $e) {
+            Log::error("Error fetching poli: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data pengguna.');
+        }
+
+    }
+
+    public function createPolis(Request $request)
+    {
+        try {
+            $request->validate([
+                'nama_poli' => 'required|string|max:255',
+                'keterangan' => 'nullable|string',
+            ]);
+
+            Poli::create($request->all());
+            return redirect()->route('admin.poliMaster')->with('success', 'Poli berhasil ditambahkan');
+        } catch (\Exception $e) {
+
+            Log::error("Error creating new poli: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan poli.');
+        }
+
+    }
+
+    public function editPoli($id)
+    {
+        try {
+            $poli = Poli::findOrFail($id);
+            return view('admin.poliEdit', compact('poli'));
+
+        } catch (\Exception $e) {
+            Log::error("Error fetching poli_id: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data pengguna.');
+        }
+    }
+
+    public function updatePoli(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'nama_poli' => 'required|string|max:255',
+                'keterangan' => 'nullable|string',
+            ]);
+
+            $p = Poli::findOrFail($id);
+            $p->update($request->all());
+            return redirect()->route('admin.poliMaster')->with('success', 'Poli berhasil diupdate');
+
+        } catch (\Exception $e) {
+            Log::error("failed update polu " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data pengguna.');
+        }
+    }
+
+    public function deletePoli($id)
+    {
+        try {
+            $p = Poli::findOrFail($id);
+            $p->delete();
+            return redirect()->route('admin.poliMaster')->with('success', 'Poli berhasil dihapus');
+        } catch (\Exception $e) {
+            Log::error("Error deleting poli: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus poli.');
+        }
+    }
 
 }

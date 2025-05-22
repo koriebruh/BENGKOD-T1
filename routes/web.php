@@ -52,6 +52,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/obat/update/{id}', [AdminController::class, 'updateObat']);
         Route::get('/obat/delete/{id}', [AdminController::class, 'deleteObat']);
 
+        //CRUD FOR POLI
+        Route::get('/poli', [AdminController::class, 'showPolis'])->name('poliMaster');
+        Route::post('/poli', [AdminController::class, 'createPolis'])->name('createPolis');
+        Route::get('/poli/edit/{id}', [AdminController::class, 'editPoli'])->name('editPoli');
+        Route::post('/poli/update/{id}', [AdminController::class, 'updatePoli'])->name('updatePoli');
+        Route::get('/poli/delete/{id}', [AdminController::class, 'deletePoli'])->name('deletePoli');
 
     });
 

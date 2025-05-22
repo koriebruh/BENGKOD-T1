@@ -11,6 +11,8 @@
                     class="nav-icon fas fa-book"></i> DokterMaster</a></li>
         <li class="nav-item"><a href="{{ route('admin.pasienMaster') }}" class="nav-link"><i
                     class="nav-icon fas fa-book"></i> PasienMaster</a></li>
+        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link"><i
+                    class="nav-icon fas fa-user-injured"></i> PoliMaster</a></li>
     </ul>
 @endsection
 

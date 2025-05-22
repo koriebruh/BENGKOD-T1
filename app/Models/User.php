@@ -26,7 +26,6 @@ class User extends Authenticatable
         'no_hp',
         'role',
         'no_ktp',
-        'no_rm',
         'poli_id',
     ];
 
@@ -36,6 +35,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'no_rm',
         'password',
         'remember_token',
     ];
