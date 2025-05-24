@@ -14,7 +14,7 @@ class Periksa extends Model
 
     protected $fillable = [
         'id_pasien',
-        'id_dokter',
+        'id_janji_periksa',
         'tgl_periksa',
         'catatan',
         'biaya_periksa'
@@ -26,10 +26,20 @@ class Periksa extends Model
         return $this->belongsTo(User::class, 'id_pasien');
     }
 
-    //RELATION TO USER
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'id_dokter');
+        return $this->belongsTo(User::class, 'id_dokter', 'id');
+    }
+
+    //RELATION TO USER
+    public function janjiPeriksa()
+    {
+        return $this->belongsTo(JanjiPeriksa::class, 'id_janji_periksa', 'id');
+    }
+
+    public function jadwalPeriksa()
+    {
+        return $this->belongsTo(JadwalPeriksa::class, 'id_jadwal_periksa', 'id');
     }
 
     public function getTglPeriksaAttribute($value)

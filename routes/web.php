@@ -66,9 +66,14 @@ Route::middleware(['auth'])->group(function () {
      * */
     Route::middleware('role:pasien')->prefix('pasien')->name('pasien.')->group(function () {
         Route::get('/dashboard', [PasienController::class, 'pasienDashboard'])->name('dashboard');
-        Route::get('/periksa', [PasienController::class, 'showPeriksaForm'])->name('periksa');
-        Route::post('/periksa', [PasienController::class, 'createPeriksa']);
+
+        Route::get('/janji-periksa', [PasienController::class, 'showFormJanjiPeriksaPasien'])->name('janjiPeriksa');
+        Route::post('/janji-periksa', [PasienController::class, 'createJanjiPeriksa'])->name('createJanjiPeriksa');
+        Route::get('/jadwal-poli/{id}', [PasienController::class, 'jadwalOpenByPoli'])->name('jadwalOpenByPoli');
+
+
         Route::get('/riwayat', [PasienController::class, 'showRiwayat'])->name('riwayat');
+
     });
 
     /*DOKTER

@@ -14,8 +14,8 @@ class PeriksaTableSeeder extends Seeder
     {
         DB::table('periksas')->insert([
             [
-                'id_pasien' => 2,
-                'id_dokter' => 1,
+                'id_pasien' => 3,
+                'id_janji_periksa' => 1,
                 'tgl_periksa' => now(),
                 'catatan' => 'Pemeriksaan rutin, pasien dalam keadaan sehat.',
                 'biaya_periksa' => 200000,
@@ -23,8 +23,8 @@ class PeriksaTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_pasien' => 4,
-                'id_dokter' => 3,
+                'id_pasien' => 5,
+                'id_janji_periksa' => 2,
                 'tgl_periksa' => now()->addDays(1),
                 'catatan' => 'Pasien mengalami batuk dan demam.',
                 'biaya_periksa' => 250000,
@@ -32,8 +32,17 @@ class PeriksaTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_pasien' => 4,
-                'id_dokter' => 5,
+                'id_pasien' => 5,
+                'id_janji_periksa' => 3,
+                'tgl_periksa' => now()->addDays(2),
+                'catatan' => 'Pemeriksaan kulit, ditemukan ruam merah.',
+                'biaya_periksa' => 300000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+            ,[
+                'id_pasien' => 3,
+                'id_janji_periksa' => 4,
                 'tgl_periksa' => now()->addDays(2),
                 'catatan' => 'Pemeriksaan kulit, ditemukan ruam merah.',
                 'biaya_periksa' => 300000,

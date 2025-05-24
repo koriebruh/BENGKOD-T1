@@ -3,6 +3,7 @@ php artisan make:migration create_obat_tabel --create=obat
 php artisan make:migration create_detail_periksa_tabel --create=detail_periksa
 php artisan make:migration create_jadwal_periksa_tabel --create=jadwal_periksa
 php artisan make:migration create_poli_tabel --create=poli
+php artisan make:migration create_janji_periksa_tabel --create=janji_periksa
 
 #php artisan make:factory UserFactory --model=User
 php artisan make:seeder UsersTableSeeder
@@ -20,6 +21,7 @@ php artisan make:model Obat
 php artisan make:model DetailPeriksa
 php artisan make:model JadwalPeriksa
 php artisan make:model poli -ms
+php artisan make:model JanjiPeriksa
 
 #MAKE CONTROLLER, itu gabungan repository service dan handler
 php artisan make:controller AuthController
@@ -34,11 +36,13 @@ App\Models\Obat::all();
 App\Models\DetailPeriksa::all();
 App\Models\JadwalPeriksa::all();
 App\Models\poli::all();
+App\Models\JanjiPeriksa::all();
 
 php artisan make:seeder ObatTableSeeder
 php artisan make:seeder PeriksaTableSeeder
 php artisan make:seeder DetailPeriksaTableSeeder
 php artisan make:seeder JadwalPeriksaTableSeeder
+php artisan make:seeder JanjiPeriksaTableSeeder
 #
 php artisan db:seed
 php artisan db:seed --class=PeriksaTableSeeder

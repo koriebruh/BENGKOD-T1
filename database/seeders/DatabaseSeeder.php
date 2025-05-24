@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+use App\Models\JanjiPeriksa;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,10 +15,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PoliSeeder::class,
             UsersTableSeeder::class,
-            PeriksaTableSeeder::class,
+            JadwalPeriksaTableSeeder::class,
+            JanjiPeriksaTableSeeder::class,
             ObatTableSeeder::class,
+            PeriksaTableSeeder::class,
             DetailPeriksaTableSeeder::class,
-            JadwalPeriksaTableSeeder::class
         ]);
     }
 }
