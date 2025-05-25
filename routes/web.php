@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:pasien')->prefix('pasien')->name('pasien.')->group(function () {
         Route::get('/dashboard', [PasienController::class, 'pasienDashboard'])->name('dashboard');
 
-        Route::get('/janji-periksa', [PasienController::class, 'showFormJanjiPeriksaPasien'])->name('janjiPeriksa');
+        Route::get('/janji-periksa', [PasienController::class, 'showJanjiPeriksaPasien'])->name('janjiPeriksa');
         Route::post('/janji-periksa', [PasienController::class, 'createJanjiPeriksa'])->name('createJanjiPeriksa');
         Route::get('/jadwal-poli/{id}', [PasienController::class, 'jadwalOpenByPoli'])->name('jadwalOpenByPoli');
 

@@ -58,4 +58,6 @@ class Periksa extends Model
             ->with(['dokter', 'pasien'])  // Eager load the 'dokter' and 'pasien' relations
             ->get();
     }
+
+
 }

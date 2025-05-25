@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JadwalPeriksa;
+use App\Models\JanjiPeriksa;
 use App\Models\Obat;
 use App\Models\Periksa;
 use App\Models\User;
@@ -109,12 +110,22 @@ class DokterController extends Controller
 
     public function dokterDashboard()
     {
-        $totalObat = Obat::count();
-        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
-        $totalDokter = User::where('role', 'dokter')->count();
-        $totalPelangan = User::where('role', 'pasien')->count();
+//        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
+//        $totalBelumDiPeriksa = JanjiPeriksa::Where('id_jadwal_periksa', '!=', null)
+//            ->whereHas('jadwalPeriksa', function ($query) {
+//                $query->where('id_dokter', auth()->user()->id);
+//            })->count();
 
-        return view('dokter.dashboard', compact('totalObat', 'totalPeriksa', 'totalDokter', 'totalPelangan'));
+
+        $totalPeriksa =  1;
+        $totalBelumDiPeriksa = JanjiPeriksa::Where('id_jadwal_periksa', '!=', null)
+            ->whereHas('jadwalPeriksa', function ($query) {
+                $query->where('id_dokter', auth()->user()->id);
+            })->count();
+
+
+
+        return view('dokter.dashboard', compact('totalPeriksa', 'totalBelumDiPeriksa',));
     }
 
 

@@ -28,4 +28,9 @@ class JanjiPeriksa extends Model
         return $this->belongsTo(User::class, 'id_pasien');
     }
 
+    public function periksa()
+    {
+        return $this->hasOne(Periksa::class, 'id_janji_periksa');  // asumsikan 'id_janji_periksa' adalah kolom yang menghubungkan kedua tabel
+    }
+
 }

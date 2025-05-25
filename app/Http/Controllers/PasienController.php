@@ -58,39 +58,56 @@ class PasienController extends Controller
             $validatedData['no_antrian'] = $noAntrian;
             JanjiPeriksa::create($validatedData);
 
-            return redirect()->route('pasien.janjiPeriksa')->with('success', 'JanjiPeriksa berhasil dibuat.');
+            return redirect()->route('pasien.janjiPeriksa')->with('success', 'Janji Periksa berhasil dibuat.');
         } catch (\Exception $e) {
-            Log::error("Error deleting obat: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus obat.');
+            Log::error("Error creating janji periksa: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat janji periksa.');
         }
     }
 
+    public function showJanjiPeriksaPasien(Request $request)
+    {
+        $id_pasien = auth()->user()->id;
+
+        // Ambil riwayat janji periksa yang belum ada di tabel periksas (belum diperiksa)
+        $janjiPeriksas = JanjiPeriksa::with(['jadwalPeriksa.dokter.poli', 'pasien'])
+            ->where('id_pasien', $id_pasien)
+            ->whereDoesntHave('periksa')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil daftar poli untuk form
+        $polis = Poli::all();
+
+        // Jika ada parameter poli_id, ambil jadwal untuk poli tersebut
+        $jadwalPeriksas = collect();
+        if ($request->has('poli_id') && $request->poli_id) {
+            $jadwalPeriksas = JadwalPeriksa::with(['dokter.poli'])
+                ->whereHas('dokter', function($query) use ($request) {
+                    $query->where('poli_id', $request->poli_id);
+                })
+                ->where('status', true)
+                ->orderBy('hari', 'asc')
+                ->orderBy('jam_mulai', 'asc')
+                ->get();
+        }
+
+        return view('pasien.janjiPeriksa', compact('janjiPeriksas', 'polis', 'jadwalPeriksas'));
+    }
+
+// Method ini bisa dihapus atau dijadikan API endpoint saja
     public function jadwalOpenByPoli($id)
     {
         $jadwalPeriksas = JadwalPeriksa::with(['dokter.poli'])
             ->whereHas('dokter', function($query) use ($id) {
                 $query->where('poli_id', $id);
             })
+            ->where('status', true)
+            ->orderBy('hari', 'asc')
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
-        return view('pasien.formJanjiPeriksa', compact('jadwalPeriksas'));
-    }
-
-    public function showFormJanjiPeriksaPasien()
-    {
-        $id_pasien = auth()->user()->id;
-
-        // Ambil riwayat janji periksa
-        $janjiPeriksas = Periksa::with(['jadwalPeriksa.dokter', 'pasien','janjiPeriksa'])
-            ->where('biaya_periksa', '<=', 0)
-            ->where('id_pasien', $id_pasien)
-            ->get();
-
-        // Ambil daftar poli untuk form
-        $polis = Poli::all();
-
-        return view('pasien.janjiPeriksa', compact('janjiPeriksas', 'polis'));
+        return response()->json(['jadwalPeriksas' => $jadwalPeriksas]);
     }
 
     public function pasienDashboard()

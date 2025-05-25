@@ -28,8 +28,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>{{$totalObat}}</h3>
-                            <p>TOTAL OBAT</p>
+                            <h3>{{$totalPeriksa}}</h3>
+                            <p>TOTAL YG SUDAH DI PERIKSA</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -41,8 +41,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>{{$totalPeriksa}}<sup style="font-size: 20px"> ORANG </sup></h3>
-                            <p>SUDAH DI PERIKSA</p>
+                            <h3>{{$totalBelumDiPeriksa}}<sup style="font-size: 20px"> ORANG </sup></h3>
+                            <p>BELUM PERIKSA</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -51,32 +51,6 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>{{$totalDokter}}</h3>
-                            <p>TOTAL DOKTER</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>{{$totalPelangan}}</h3>
-                            <p>TOTAL PELANGGAN</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-            </div>
 
             <!-- Welcome Message -->
             @if(session('welcome_message'))
