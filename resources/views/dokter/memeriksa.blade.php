@@ -87,32 +87,37 @@
                                     <tr>
                                         <th width="5%">No</th>
                                         <th width="15%">Nama Pasien</th>
-                                        <th width="15%">Tanggal Periksa</th>
-                                        <th width="20%">Catatan</th>
-                                        <th width="15%">Status</th>
+                                        <th width="15%">Jadwal Periksa</th>
+                                        <th width="20%">Keluhan</th>
+                                        <th width="15%">Status & Antrian</th>
                                         <th width="15%">Dokter</th>
                                         <th width="15%">Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($periksas as $index => $periksa)
+                                    @foreach($periksas as $index => $janjiPeriksa)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-user-injured text-primary mr-2"></i>
-                                                    <strong>{{ $periksa->pasien->name ?? 'N/A' }}</strong>
+                                                    <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>
                                                 </div>
                                             </td>
                                             <td>
                                                 <i class="fas fa-calendar-alt text-info mr-1"></i>
-                                                {{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d M Y') }}
+                                                <strong>{{ ucfirst($janjiPeriksa->jadwalPeriksa->hari) }}</strong>
+                                                <br>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock mr-1"></i>
+                                                    {{ $janjiPeriksa->jadwalPeriksa->jam_mulai }} - {{ $janjiPeriksa->jadwalPeriksa->jam_selesai }}
+                                                </small>
                                             </td>
                                             <td>
-                                                @if($periksa->catatan)
-                                                    <span class="text-muted">{{ Str::limit($periksa->catatan, 50) }}</span>
+                                                @if($janjiPeriksa->keluhan)
+                                                    <span class="text-muted">{{ Str::limit($janjiPeriksa->keluhan, 50) }}</span>
                                                 @else
-                                                    <span class="text-muted font-italic">Belum ada catatan</span>
+                                                    <span class="text-muted font-italic">Belum ada keluhan</span>
                                                 @endif
                                             </td>
                                             <td>
@@ -120,14 +125,16 @@
                                                     <i class="fas fa-clock mr-1"></i>
                                                     Menunggu Pemeriksaan
                                                 </span>
+                                                <br>
+                                                <small class="text-muted">No. Antrian: {{ $janjiPeriksa->no_antrian }}</small>
                                             </td>
                                             <td>
                                                 <i class="fas fa-user-md text-success mr-1"></i>
-                                                {{ $periksa->dokter->name ?? 'N/A' }}
+                                                {{ $janjiPeriksa->jadwalPeriksa->dokter->name ?? 'N/A' }}
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('dokter.memeriksEdit', $periksa->id) }}"
+                                                    <a href="{{ route('dokter.memeriksEdit', $janjiPeriksa->id) }}"
                                                        class="btn btn-primary btn-sm"
                                                        title="Periksa Pasien">
                                                         <i class="fas fa-stethoscope"></i> Periksa
@@ -136,14 +143,14 @@
                                                     <button type="button"
                                                             class="btn btn-danger btn-sm"
                                                             data-toggle="modal"
-                                                            data-target="#deleteModal{{ $periksa->id }}"
+                                                            data-target="#deleteModal{{ $janjiPeriksa->id }}"
                                                             title="Tolak Pemeriksaan">
                                                         <i class="fas fa-times"></i> Tolak
                                                     </button>
                                                 </div>
 
                                                 <!-- Delete Modal -->
-                                                <div class="modal fade" id="deleteModal{{ $periksa->id }}" tabindex="-1" role="dialog">
+                                                <div class="modal fade" id="deleteModal{{ $janjiPeriksa->id }}" tabindex="-1" role="dialog">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header bg-danger text-white">
@@ -155,14 +162,14 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p>Apakah Anda yakin ingin menolak pemeriksaan untuk pasien <strong>{{ $periksa->pasien->name ?? 'N/A' }}</strong>?</p>
+                                                                <p>Apakah Anda yakin ingin menolak pemeriksaan untuk pasien <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>?</p>
                                                                 <p class="text-muted">Tindakan ini tidak dapat dibatalkan.</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                                     <i class="fas fa-times"></i> Batal
                                                                 </button>
-                                                                <form action="{{ route('dokter.tolakPeriksa', $periksa->id) }}" method="POST" style="display: inline;">
+                                                                <form action="{{ route('dokter.tolakPeriksa', $janjiPeriksa->id) }}" method="POST" style="display: inline;">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" class="btn btn-danger">

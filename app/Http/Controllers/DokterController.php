@@ -9,6 +9,7 @@ use App\Models\Periksa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -21,52 +22,56 @@ class DokterController extends Controller
         // Get the ID of the currently logged-in doctor
         $id_dokter = auth()->user()->id;
 
-        // Fetch only the examinations associated with this doctor
-        $periksas = Periksa::with(['pasien', 'dokter', 'obat'])
-            ->where('id_dokter', $id_dokter)
-            ->where('biaya_periksa', "<=", 0)
+        // Ambil riwayat janji periksa yang belum ada di tabel periksas (belum diperiksa)
+        $periksas = JanjiPeriksa::with(['jadwalPeriksa', 'pasien'])
+            ->whereHas('jadwalPeriksa', function ($query) use ($id_dokter) {
+                $query->where('id_dokter', $id_dokter);
+            })
+            ->whereDoesntHave('periksa')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('dokter.memeriksa', compact('periksas'));
     }
 
+
     public function editPeriksa($id)
     {
-        // Ambil data pemeriksaan berdasarkan ID
-        $periksa = Periksa::with(['pasien', 'dokter', 'obat'])->findOrFail($id);
+        // Ambil data janji periksa berdasarkan ID
+        $janjiPeriksa = JanjiPeriksa::with(['jadwalPeriksa.dokter', 'pasien'])->findOrFail($id);
 
-        // Pastikan dokter yang login hanya bisa mengedit pemeriksaan miliknya
-        if ($periksa->id_dokter !== auth()->user()->id) {
-            return redirect()->route('dokter.periksa')->with('error', 'Unauthorized access.');
+        // Pastikan dokter yang login hanya bisa mengedit janji periksa miliknya
+        if ($janjiPeriksa->jadwalPeriksa->id_dokter !== auth()->user()->id) {
+            return redirect()->route('dokter.memeriksa')->with('error', 'Unauthorized access.');
         }
 
         // Ambil daftar obat untuk dropdown
         $obatList = Obat::all();
 
-        // Ambil daftar pasien untuk dropdown
-        $pasienList = User::where('role', 'pasien')->get();
-
-        // Tampilkan halaman edit dengan data pemeriksaan, daftar obat, dan daftar pasien
-        return view('dokter.memeriksaEdit', compact('periksa', 'pasienList', 'obatList'));
+        // Tampilkan halaman edit dengan data janji periksa dan daftar obat
+        return view('dokter.memeriksaEdit', compact('janjiPeriksa', 'obatList'));
     }
 
     public function memeriksaPasien(Request $request, $id)
     {
-
         $request->validate([
-            'id_pasien' => 'required|exists:users,id',
             'tgl_periksa' => 'required|date',
             'catatan' => 'nullable|string',
             'obat' => 'required|array',  // Memastikan obat dipilih
             'obat.*' => 'exists:obats,id',  // Memastikan setiap obat yang dipilih ada di database
         ]);
 
+        // Ambil data janji periksa
+        $janjiPeriksa = JanjiPeriksa::with(['jadwalPeriksa.dokter', 'pasien'])->findOrFail($id);
 
-        $periksa = Periksa::findOrFail($id);
+        // Pastikan dokter yang login hanya bisa memproses janji periksa miliknya
+        if ($janjiPeriksa->jadwalPeriksa->id_dokter !== auth()->user()->id) {
+            return redirect()->route('dokter.memeriksa')->with('error', 'Unauthorized access.');
+        }
 
-        // Pastikan dokter yang login hanya bisa mengedit pemeriksaan miliknya
-        if ($periksa->id_dokter !== auth()->user()->id) {
-            return redirect()->route('dokter.periksa')->with('error', 'Unauthorized access.');
+        // Pastikan janji periksa belum diperiksa
+        if ($janjiPeriksa->periksa) {
+            return redirect()->route('dokter.memeriksa')->with('error', 'Pasien sudah diperiksa.');
         }
 
         // Menghitung total harga obat yang dipilih
@@ -75,39 +80,61 @@ class DokterController extends Controller
         // Hitung biaya pemeriksaan dengan menambahkan 150k ke total harga obat
         $biayaPeriksa = $totalHargaObat + 150000;
 
-        // Update data pemeriksaan
-        $periksa->update([
-            'id_pasien' => $request->id_pasien,
-            'tgl_periksa' => $request->tgl_periksa,
-            'catatan' => $request->catatan,
-            'biaya_periksa' => $biayaPeriksa, // Update biaya pemeriksaan dengan harga yang dihitung
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // Menyimpan relasi obat yang dipilih
-        $periksa->obat()->sync($request->obat);
+            // Buat data pemeriksaan baru
+            $periksa = Periksa::create([
+                'id_pasien' => $janjiPeriksa->id_pasien,
+                'id_janji_periksa' => $janjiPeriksa->id,
+                'tgl_periksa' => $request->tgl_periksa,
+                'catatan' => $request->catatan,
+                'biaya_periksa' => $biayaPeriksa,
+            ]);
 
-        return redirect()->route('dokter.memeriksa')->with('success', 'Pemeriksaan berhasil diperbarui.');
+            // Menyimpan relasi obat yang dipilih
+            $periksa->obat()->sync($request->obat);
+
+            DB::commit();
+
+            return redirect()->route('dokter.memeriksa')->with('success', 'Pemeriksaan berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error("Error creating periksa: " . $e->getMessage());
+            return redirect()->route('dokter.memeriksa')->with('error', 'Terjadi kesalahan saat menyimpan pemeriksaan.');
+        }
     }
 
-
-    public function deletePeriksa($id)
+    public function deleteJanjiPeriksa($id)
     {
-        // Get the examination to delete
-        $periksa = Periksa::findOrFail($id);
+        // Ambil data janji periksa yang akan ditolak
+        $janjiPeriksa = JanjiPeriksa::with(['jadwalPeriksa.dokter', 'pasien'])->findOrFail($id);
 
-        // Ensure the doctor is authorized to delete the examination
-        if ($periksa->id_dokter !== auth()->user()->id) {
-            Log::error("Error delete periksa: ", $id);
+        // Pastikan dokter yang login hanya bisa menolak janji periksa miliknya
+        if ($janjiPeriksa->jadwalPeriksa->id_dokter !== auth()->user()->id) {
+            Log::error("Unauthorized access to delete janji periksa: " . $id);
             return redirect()->route('dokter.memeriksa')->with('error', 'Unauthorized access.');
         }
 
-        // Delete the examination
-        $periksa->delete();
-        Log::error("Error delete periksa: ", $id);
+        // Pastikan janji periksa belum diperiksa
+        if ($janjiPeriksa->periksa) {
+            return redirect()->route('dokter.memeriksa')->with('error', 'Tidak dapat menolak, pasien sudah diperiksa.');
+        }
 
-        return redirect()->route('dokter.memeriksa')->with('success', 'Examination deleted successfully.');
+        try {
+            // Hapus janji periksa (menolak)
+            $janjiPeriksa->delete();
+
+            Log::info("Janji periksa rejected successfully: " . $id);
+
+            return redirect()->route('dokter.memeriksa')->with('success', 'Janji periksa berhasil ditolak.');
+
+        } catch (\Exception $e) {
+            Log::error("Error rejecting janji periksa: " . $e->getMessage());
+            return redirect()->route('dokter.memeriksa')->with('error', 'Terjadi kesalahan saat menolak janji periksa.');
+        }
     }
-
     public function dokterDashboard()
     {
 //        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
@@ -426,11 +453,13 @@ class DokterController extends Controller
         $id_dokter = auth()->user()->id;
 
         // Fetch only the examinations associated with this doctor
-        $periksas = Periksa::with(['pasien', 'dokter', 'obat'])
-            ->where('id_dokter', $id_dokter)
-            ->where('biaya_periksa', ">", 0)
+        $periksas = Periksa::with(['pasien', 'obat','janjiPeriksa.jadwalPeriksa.dokter'])
+            ->whereHas('janjiPeriksa.jadwalPeriksa', function ($query) use ($id_dokter) {
+                $query->where('id_dokter', $id_dokter);
+            })
             ->get();
 
+//        dd($periksas);
 
         return view('dokter.historyPeriksa', compact('periksas'));
     }

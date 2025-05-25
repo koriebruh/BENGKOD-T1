@@ -2,20 +2,34 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.memeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Periksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> JadwalPeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.historyPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> historyPeriksa</a></li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.memeriksa') }}" class="nav-link active">
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p>Memeriksa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>Jadwal Periksa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-history"></i>
+                <p>History Periksa</p>
+            </a>
+        </li>
     </ul>
 @endsection
 
-
-
-@section('title', 'Edit Pemeriksaan Pasien')
+@section('title', 'Memeriksa Pasien')
 
 @section('content')
     <div class="content-wrapper">
@@ -24,13 +38,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Edit Pemeriksaan Pasien</h1>
+                        <h1 class="m-0">Memeriksa Pasien</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dokter.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('dokter.memeriksa') }}">Memeriksa</a></li>
-                            <li class="breadcrumb-item active">Edit Pemeriksaan</li>
+                            <li class="breadcrumb-item active">Form Pemeriksaan</li>
                         </ol>
                     </div>
                 </div>
@@ -59,22 +73,8 @@
                     </div>
                 @endif
 
-                @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle"></i> Terdapat kesalahan dalam form:
-                        <ul class="mb-0 mt-2">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
-
                 <div class="row">
-                    <!-- Patient Info Card -->
+                    <!-- Patient Information Card -->
                     <div class="col-md-4">
                         <div class="card card-primary">
                             <div class="card-header">
@@ -83,33 +83,64 @@
                                 </h3>
                             </div>
                             <div class="card-body">
-                                <div class="text-center mb-3">
-                                    <div class="profile-img-container">
-                                        <i class="fas fa-user-circle fa-4x text-primary"></i>
+                                <div class="form-group">
+                                    <label><i class="fas fa-user mr-2"></i>Nama Pasien</label>
+                                    <p class="form-control-static font-weight-bold">{{ $janjiPeriksa->pasien->name }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope mr-2"></i>Email</label>
+                                    <p class="form-control-static">{{ $janjiPeriksa->pasien->email }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card mr-2"></i>No. KTP</label>
+                                    <p class="form-control-static">{{ $janjiPeriksa->pasien->no_ktp ?? 'Tidak tersedia' }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone mr-2"></i>No. HP</label>
+                                    <p class="form-control-static">{{ $janjiPeriksa->pasien->no_hp ?? 'Tidak tersedia' }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt mr-2"></i>Alamat</label>
+                                    <p class="form-control-static">{{ $janjiPeriksa->pasien->alamat ?? 'Tidak tersedia' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Information Card -->
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-calendar-check"></i> Informasi Janji
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt mr-2"></i>Hari</label>
+                                    <p class="form-control-static font-weight-bold">{{ ucfirst($janjiPeriksa->jadwalPeriksa->hari) }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-clock mr-2"></i>Waktu</label>
+                                    <p class="form-control-static">{{ $janjiPeriksa->jadwalPeriksa->jam_mulai }} - {{ $janjiPeriksa->jadwalPeriksa->jam_selesai }}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-sort-numeric-up mr-2"></i>No. Antrian</label>
+                                    <p class="form-control-static">
+                                        <span class="badge badge-primary badge-lg">{{ $janjiPeriksa->no_antrian }}</span>
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-notes-medical mr-2"></i>Keluhan</label>
+                                    <div class="alert alert-light">
+                                        {{ $janjiPeriksa->keluhan ?? 'Tidak ada keluhan' }}
                                     </div>
                                 </div>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <td><strong>Nama:</strong></td>
-                                        <td>{{ $periksa->pasien->name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Email:</strong></td>
-                                        <td>{{ $periksa->pasien->email ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Dokter:</strong></td>
-                                        <td>{{ $periksa->dokter->name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Status:</strong></td>
-                                        <td>
-                                        <span class="badge badge-warning">
-                                            <i class="fas fa-clock"></i> Menunggu Pemeriksaan
-                                        </span>
-                                        </td>
-                                    </tr>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -122,68 +153,48 @@
                                     <i class="fas fa-stethoscope"></i> Form Pemeriksaan
                                 </h3>
                             </div>
-                            <form action="{{ route('dokter.memeriksaPasien', $periksa->id) }}" method="POST">
+                            <form action="{{ route('dokter.memeriksaPasien', $janjiPeriksa->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="card-body">
-                                    <!-- Pasien Selection -->
-                                    <div class="form-group">
-                                        <label for="id_pasien">
-                                            <i class="fas fa-user-injured text-primary"></i> Pasien
-                                        </label>
-                                        <select class="form-control select2 @error('id_pasien') is-invalid @enderror"
-                                                id="id_pasien"
-                                                name="id_pasien"
-                                                required>
-                                            <option value="">Pilih Pasien</option>
-                                            @foreach($pasienList as $pasien)
-                                                <option value="{{ $pasien->id }}"
-                                                    {{ old('id_pasien', $periksa->id_pasien) == $pasien->id ? 'selected' : '' }}>
-                                                    {{ $pasien->name }} - {{ $pasien->email }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('id_pasien')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Examination Date -->
+                                    <!-- Tanggal Periksa -->
                                     <div class="form-group">
                                         <label for="tgl_periksa">
-                                            <i class="fas fa-calendar-alt text-info"></i> Tanggal Periksa
+                                            <i class="fas fa-calendar-alt mr-2"></i>Tanggal Periksa
+                                            <span class="text-danger">*</span>
                                         </label>
-                                        <input type="date"
+                                        <input type="datetime-local"
                                                class="form-control @error('tgl_periksa') is-invalid @enderror"
                                                id="tgl_periksa"
                                                name="tgl_periksa"
-                                               value="{{ old('tgl_periksa', $periksa->tgl_periksa) }}"
+                                               value="{{ old('tgl_periksa', now()->format('Y-m-d\TH:i')) }}"
                                                required>
                                         @error('tgl_periksa')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
 
-                                    <!-- Notes -->
+                                    <!-- Catatan -->
                                     <div class="form-group">
                                         <label for="catatan">
-                                            <i class="fas fa-notes-medical text-warning"></i> Catatan Pemeriksaan
+                                            <i class="fas fa-sticky-note mr-2"></i>Catatan Pemeriksaan
                                         </label>
                                         <textarea class="form-control @error('catatan') is-invalid @enderror"
                                                   id="catatan"
                                                   name="catatan"
                                                   rows="4"
-                                                  placeholder="Masukkan catatan pemeriksaan, keluhan pasien, diagnosa, dll...">{{ old('catatan', $periksa->catatan) }}</textarea>
+                                                  placeholder="Masukkan catatan hasil pemeriksaan...">{{ old('catatan') }}</textarea>
                                         @error('catatan')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
 
-                                    <!-- Medicine Selection -->
+                                    <!-- Obat -->
                                     <div class="form-group">
                                         <label for="obat">
-                                            <i class="fas fa-pills text-success"></i> Obat yang Diberikan
+                                            <i class="fas fa-pills mr-2"></i>Pilih Obat
+                                            <span class="text-danger">*</span>
                                         </label>
                                         <select class="form-control select2 @error('obat') is-invalid @enderror"
                                                 id="obat"
@@ -193,8 +204,8 @@
                                                 required>
                                             @foreach($obatList as $obat)
                                                 <option value="{{ $obat->id }}"
-                                                        data-price="{{ $obat->harga }}"
-                                                    {{ in_array($obat->id, old('obat', $periksa->obat->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                                        data-harga="{{ $obat->harga }}"
+                                                    {{ in_array($obat->id, old('obat', [])) ? 'selected' : '' }}>
                                                     {{ $obat->nama_obat }} - Rp {{ number_format($obat->harga, 0, ',', '.') }}
                                                 </option>
                                             @endforeach
@@ -202,36 +213,29 @@
                                         @error('obat')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <small class="form-text text-muted">
-                                            Pilih satu atau lebih obat yang akan diberikan kepada pasien
-                                        </small>
                                     </div>
 
-                                    <!-- Cost Calculation Display -->
+                                    <!-- Biaya Estimasi -->
                                     <div class="form-group">
+                                        <label>
+                                            <i class="fas fa-money-bill-wave mr-2"></i>Estimasi Biaya
+                                        </label>
                                         <div class="card bg-light">
                                             <div class="card-body">
-                                                <h6 class="card-title">
-                                                    <i class="fas fa-calculator text-primary"></i> Rincian Biaya
-                                                </h6>
-                                                <table class="table table-sm mb-0">
-                                                    <tr>
-                                                        <td>Biaya Konsultasi Dokter:</td>
-                                                        <td class="text-right"><strong>Rp 150.000</strong></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Total Harga Obat:</td>
-                                                        <td class="text-right">
-                                                            <span id="totalObat"><strong>Rp 0</strong></span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="table-primary">
-                                                        <td><strong>Total Biaya Periksa:</strong></td>
-                                                        <td class="text-right">
-                                                            <span id="totalBiaya"><strong>Rp 150.000</strong></span>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <span>Biaya Konsultasi:</span><br>
+                                                        <span>Biaya Obat:</span><br>
+                                                        <hr>
+                                                        <strong>Total Biaya:</strong>
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <span>Rp 150.000</span><br>
+                                                        <span id="total-obat">Rp 0</span><br>
+                                                        <hr>
+                                                        <strong id="total-biaya">Rp 150.000</strong>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -239,13 +243,13 @@
 
                                 <div class="card-footer">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <a href="{{ route('dokter.memeriksa') }}" class="btn btn-secondary">
+                                        <div class="col-6">
+                                            <a href="{{ route('dokter.memeriksa') }}" class="btn btn-secondary btn-block">
                                                 <i class="fas fa-arrow-left"></i> Kembali
                                             </a>
                                         </div>
-                                        <div class="col-md-6 text-right">
-                                            <button type="submit" class="btn btn-success">
+                                        <div class="col-6">
+                                            <button type="submit" class="btn btn-success btn-block" id="submit-btn">
                                                 <i class="fas fa-save"></i> Simpan Pemeriksaan
                                             </button>
                                         </div>
@@ -261,6 +265,10 @@
 @endsection
 
 @section('scripts')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script>
         $(document).ready(function() {
             // Initialize Select2
@@ -269,29 +277,27 @@
                 width: '100%'
             });
 
-            // Calculate total cost when medicine selection changes
-            function calculateTotal() {
+            // Calculate total cost when medicines are selected
+            $('#obat').on('change', function() {
                 let totalObat = 0;
-                const selectedOptions = $('#obat option:selected');
+                let selectedOptions = $(this).find('option:selected');
 
                 selectedOptions.each(function() {
-                    const price = parseInt($(this).data('price')) || 0;
-                    totalObat += price;
+                    totalObat += parseInt($(this).data('harga')) || 0;
                 });
 
-                const biayaKonsultasi = 150000;
-                const totalBiaya = totalObat + biayaKonsultasi;
+                let biayaKonsultasi = 150000;
+                let totalBiaya = biayaKonsultasi + totalObat;
 
-                $('#totalObat').html('<strong>Rp ' + new Intl.NumberFormat('id-ID').format(totalObat) + '</strong>');
-                $('#totalBiaya').html('<strong>Rp ' + new Intl.NumberFormat('id-ID').format(totalBiaya) + '</strong>');
-            }
+                $('#total-obat').text('Rp ' + totalObat.toLocaleString('id-ID'));
+                $('#total-biaya').text('Rp ' + totalBiaya.toLocaleString('id-ID'));
 
-            // Calculate initial total
-            calculateTotal();
-
-            // Recalculate when medicine selection changes
-            $('#obat').on('change', function() {
-                calculateTotal();
+                // Enable/disable submit button based on selection
+                if (selectedOptions.length > 0) {
+                    $('#submit-btn').prop('disabled', false);
+                } else {
+                    $('#submit-btn').prop('disabled', true);
+                }
             });
 
             // Auto hide alerts after 5 seconds
@@ -301,18 +307,34 @@
 
             // Form validation
             $('form').on('submit', function(e) {
-                const selectedObat = $('#obat').val();
+                let selectedObat = $('#obat').val();
                 if (!selectedObat || selectedObat.length === 0) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian!',
-                        text: 'Silakan pilih minimal satu obat untuk pasien.',
-                        confirmButtonText: 'OK'
-                    });
+                    alert('Harap pilih minimal satu obat untuk pasien.');
                     return false;
                 }
             });
+
+            // Initialize the form
+            $('#obat').trigger('change');
         });
     </script>
+
+    <style>
+        .select2-container--bootstrap4 .select2-selection {
+            height: calc(2.25rem + 2px) !important;
+        }
+
+        .form-control-static {
+            padding-top: 0.375rem;
+            padding-bottom: 0.375rem;
+            margin-bottom: 0;
+            border: 0;
+        }
+
+        .badge-lg {
+            font-size: 1.1em;
+            padding: 0.5rem 1rem;
+        }
+    </style>
 @endsection

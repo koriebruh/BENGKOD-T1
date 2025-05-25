@@ -2,103 +2,157 @@
 
 @section('nav-content')
     <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.memeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Memeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> JadwalPeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.historyPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> historyPeriksa</a></li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.memeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>Memeriksa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>Jadwal Periksa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link active">
+                <i class="nav-icon fas fa-history"></i>
+                <p>History Periksa</p>
+            </a>
+        </li>
     </ul>
 @endsection
 
 @section('content')
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">History Periksa</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('dokter.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">History Periksa</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1>INI HISOTRY PERIKSA Sir {{ Auth::user()->name }} </h1>
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>NO_RM </th>
-            <th>KODE PERIKSA</th>
-            <th>Nama Pasien</th>
-            <th>Tanggal Periksa</th>
-            <th>Catatan</th>
-            <th>Obat</th>
-            <th>Biaya Periksa</th>
-            <th>Detail Biaya</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($periksas as $periksa)
-            <tr>
-                <td>{{ $periksa->pasien->no_rm}}</td>
-                <td>{{ $periksa->id }}</td>
-                <td>{{ $periksa->pasien->name ?? 'Tidak Diketahui' }}</td>
-                <td>{{ $periksa->tgl_periksa }}</td>
-                <td>{{ $periksa->catatan }}</td>
-                <td>
-                    @foreach($periksa->obat as $obat)
-                        {{ $obat->nama_obat }} <br>
-                    @endforeach
-                </td>
-                <td>Rp. {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</td>
-                <td>
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailModal{{ $periksa->id }}">
-                        Lihat Detail
-                    </button>
-
-                    <!-- Modal Detail Biaya -->
-                    <div class="modal fade" id="detailModal{{ $periksa->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $periksa->id }}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="detailModalLabel{{ $periksa->id }}">Detail Biaya - PR{{ $periksa->id }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <table class="table table-bordered">
-                                        @php
-                                            $totalObat = 0;
-                                            foreach($periksa->obat as $obat) {
-                                                $totalObat += $obat->harga;
-                                            }
-                                            $biayaKonsultasi = $periksa->biaya_periksa - $totalObat;
-                                        @endphp
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Riwayat Pemeriksaan Pasien</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            @if($periksas->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
                                         <tr>
-                                            <th>Biaya Konsultasi</th>
-                                            <td>Rp. {{ number_format($biayaKonsultasi, 0, ',', '.') }}</td>
+                                            <th>No</th>
+                                            <th>Nama Pasien</th>
+                                            <th>Tanggal Periksa</th>
+                                            <th>Keluhan</th>
+                                            <th>Catatan Dokter</th>
+                                            <th>Obat</th>
+                                            <th>BiayaTotal</th>
                                         </tr>
-                                        <tr>
-                                            <th>Biaya Obat</th>
-                                            <td>
-                                                @foreach($periksa->obat as $obat)
-                                                    {{ $obat->nama_obat }} ({{ $obat->kemasan }}) - Rp. {{ number_format($obat->harga, 0, ',', '.') }}<br>
-                                                @endforeach
-                                                <hr>
-                                                <strong>Total Obat: Rp. {{ number_format($totalObat, 0, ',', '.') }}</strong>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-light">
-                                            <th>Total Biaya</th>
-                                            <td><strong>Rp. {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</strong></td>
-                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($periksas as $index => $periksa)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <strong>{{ $periksa->pasien->name }}</strong>
+                                                </td>
+                                                <td>
+                                                        <span class="badge badge-info">
+                                                            {{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d/m/Y H:i') }}
+                                                        </span>
+                                                </td>
+                                                <td>
+                                                    {{ $periksa->janjiPeriksa->keluhan ?? '-' }}
+                                                </td>
+                                                <td>
+                                                    {{ $periksa->catatan ?? '-' }}
+                                                </td>
+                                                <td>
+                                                    @if($periksa->obat->count() > 0)
+                                                        <ul class="list-unstyled mb-0">
+                                                            @foreach($periksa->obat as $obat)
+                                                                <li class="mb-1">
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                            <span class="badge badge-secondary">
+                                                                                {{ $obat->nama_obat }} ({{ $obat->kemasan }})
+                                                                            </span>
+                                                                        <small class="text-success font-weight-bold">
+                                                                            Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                                                        </small>
+                                                                    </div>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">
+                                                        Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            @else
+                                <div class="text-center py-4">
+                                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Belum ada riwayat pemeriksaan</h5>
+                                    <p class="text-muted">Data pemeriksaan akan muncul setelah Anda melakukan pemeriksaan pasien.</p>
                                 </div>
-                            </div>
+                            @endif
                         </div>
+                        <!-- /.card-body -->
+                        @if(method_exists($periksas, 'hasPages') && $periksas->hasPages())
+                            <div class="card-footer">
+                                {{ $periksas->links() }}
+                            </div>
+                        @endif
                     </div>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
 
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable if you want to add search/sort functionality
+            // $('.table').DataTable({
+            //     "responsive": true,
+            //     "lengthChange": false,
+            //     "autoWidth": false,
+            // });
+        });
+    </script>
+@endpush
 
 

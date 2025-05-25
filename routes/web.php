@@ -84,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/memeriksa', [DokterController::class, 'notYetPeriksa'])->name('memeriksa');
         Route::get('/memeriksa/{id}/edit', [DokterController::class, 'editPeriksa'])->name('memeriksEdit');
         Route::put('/memeriksa/{id}', [DokterController::class, 'memeriksaPasien'])->name('memeriksaPasien');
-        Route::delete('/memeriksa/{id}', [DokterController::class, 'deletePeriksa'])->name('tolakPeriksa');
+        Route::delete('/memeriksa/{id}', [DokterController::class, 'deleteJanjiPeriksa'])->name('tolakPeriksa');
 
         // EDIT PROFILE
         Route::get('/profile/{id}/edit', [DokterController::class, 'getProfile'])->name('dashboardEdit');
