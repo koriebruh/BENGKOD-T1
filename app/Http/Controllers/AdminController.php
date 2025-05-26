@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JanjiPeriksa;
 use App\Models\Obat;
 use App\Models\Periksa;
 use App\Models\Poli;
@@ -20,7 +21,7 @@ class AdminController extends Controller
     public function adminDashboard()
     {
         $totalObat = Obat::count();
-        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
+        $totalPeriksa = Periksa::count();
         $totalDokter = User::where('role', 'dokter')->count();
         $totalPelangan = User::where('role', 'pasien')->count();
 

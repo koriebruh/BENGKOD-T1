@@ -135,24 +135,28 @@ class DokterController extends Controller
             return redirect()->route('dokter.memeriksa')->with('error', 'Terjadi kesalahan saat menolak janji periksa.');
         }
     }
+
     public function dokterDashboard()
     {
-//        $totalPeriksa = Periksa::where('id_dokter', auth()->user()->id)->count();
-//        $totalBelumDiPeriksa = JanjiPeriksa::Where('id_jadwal_periksa', '!=', null)
-//            ->whereHas('jadwalPeriksa', function ($query) {
-//                $query->where('id_dokter', auth()->user()->id);
-//            })->count();
+        $id_dokter = auth()->user()->id;
 
 
-        $totalPeriksa =  1;
-        $totalBelumDiPeriksa = JanjiPeriksa::Where('id_jadwal_periksa', '!=', null)
+        $totalBelumDiPeriksa = JanjiPeriksa::with(['jadwalPeriksa', 'pasien'])
+            ->whereHas('jadwalPeriksa', function ($query) use ($id_dokter) {
+                $query->where('id_dokter', $id_dokter);
+            })
+            ->whereDoesntHave('periksa')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->count();
+
+        $totalPeriksa = JanjiPeriksa::Where('id_jadwal_periksa', '!=', null)
             ->whereHas('jadwalPeriksa', function ($query) {
                 $query->where('id_dokter', auth()->user()->id);
             })->count();
 
 
-
-        return view('dokter.dashboard', compact('totalPeriksa', 'totalBelumDiPeriksa',));
+        return view('dokter.dashboard', compact('totalPeriksa', 'totalBelumDiPeriksa'));
     }
 
 
@@ -453,7 +457,7 @@ class DokterController extends Controller
         $id_dokter = auth()->user()->id;
 
         // Fetch only the examinations associated with this doctor
-        $periksas = Periksa::with(['pasien', 'obat','janjiPeriksa.jadwalPeriksa.dokter'])
+        $periksas = Periksa::with(['pasien', 'obat', 'janjiPeriksa.jadwalPeriksa.dokter'])
             ->whereHas('janjiPeriksa.jadwalPeriksa', function ($query) use ($id_dokter) {
                 $query->where('id_dokter', $id_dokter);
             })

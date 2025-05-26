@@ -132,7 +132,7 @@
                                             <option value="">-- Pilih Jadwal --</option>
                                             @foreach($jadwalPeriksas as $jadwal)
                                                 <option value="{{ $jadwal->id }}" {{ old('id_jadwal_periksa') == $jadwal->id ? 'selected' : '' }}>
-                                                    Dr. {{ $jadwal->dokter->nama }} - {{ $jadwal->hari }}
+                                                    Dr. {{ $jadwal->dokter->name }} - {{ $jadwal->hari }}
                                                     ({{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }})
                                                 </option>
                                             @endforeach
@@ -191,7 +191,7 @@
                                     @foreach($jadwalPeriksas as $jadwal)
                                         <tr>
                                             <td>
-                                                <small><strong>Dr. {{ $jadwal->dokter->nama }}</strong></small>
+                                                <small><strong>Dr. {{ $jadwal->dokter->name }}</strong></small>
                                             </td>
                                             <td>
                                                 <small>{{ $jadwal->hari }}</small>
@@ -246,7 +246,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-user-md text-primary mr-2"></i>
                                                     <div>
-                                                        <strong>{{ $janji->jadwalPeriksa->dokter->nama }}</strong>
+                                                        <strong>{{ $janji->jadwalPeriksa->dokter->name }}</strong>
                                                     </div>
                                                 </div>
                                             </td>
