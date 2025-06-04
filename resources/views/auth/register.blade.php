@@ -13,7 +13,7 @@
 
         .register-container {
             max-width: 500px;
-            margin: 80px auto;
+            margin: 50px auto;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -35,6 +35,11 @@
         .login-link {
             text-align: center;
             margin-top: 20px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
         }
     </style>
 </head>
@@ -60,25 +65,58 @@
                 <label for="name" class="form-label">Nama</label>
                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
                        value="{{ old('name') }}" required autofocus>
+                @error('name')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
                        value="{{ old('email') }}" required>
+                @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
-                <label for="no_hp" class="form-label">no_hp</label>
-                <input type="no_hp" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp"
-                       value="{{ old('no_hp') }}" required>
+                <label for="no_hp" class="form-label">Nomor HP</label>
+                <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp"
+                       value="{{ old('no_hp') }}" placeholder="08xxxxxxxxxx">
+                @error('no_hp')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
+            <div class="mb-3">
+                <label for="no_ktp" class="form-label">Nomor KTP</label>
+                <input type="text" class="form-control @error('no_ktp') is-invalid @enderror" id="no_ktp" name="no_ktp"
+                       value="{{ old('no_ktp') }}" placeholder="16 digit nomor KTP" maxlength="16">
+                @error('no_ktp')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="alamat" class="form-label">Alamat</label>
+                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat"
+                          rows="3" placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
+                @error('alamat')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Role hidden field, default sebagai pasien -->
+            <input type="hidden" name="role" value="pasien">
 
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
                        name="password" required>
+                <div class="form-text">Password minimal 6 karakter</div>
+                @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
@@ -86,21 +124,6 @@
                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
                        required>
             </div>
-
-            <div class="mb-3">
-                <label for="role" class="form-label">Daftar Sebagai</label>
-                <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
-                    <option value="pasien" selected>Pasien</option>
-                    <option value="dokter">Dokter</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="alamat" class="form-label">Alamat</label>
-                <input type="alamat" class="form-control @error('alamat') is-invalid @enderror" id="alamat"
-                       name="alamat" required>
-            </div>
-
 
             <button type="submit" class="btn btn-primary btn-register">Register</button>
         </form>

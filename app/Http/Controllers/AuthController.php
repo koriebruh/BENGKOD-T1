@@ -55,6 +55,9 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'alamat' => 'nullable|string',
+            'no_hp' => 'nullable|string',
+            'no_ktp' => 'nullable|string|unique:users',
             // Validasi lainnya
         ]);
 
@@ -65,6 +68,7 @@ class AuthController extends Controller
             'role' => $request->role ?? 'pasien',
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
+            'no_ktp' => $request->no_ktp,
         ]);
 
         Auth::login($user);
